@@ -32,6 +32,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        lm = new ArrayList<>();
+        sm = new ArrayList<>();
+
         Handler hand = new Handler();
         hand.postDelayed(this::loadLeaders, 1000);
 
@@ -42,11 +45,12 @@ public class SplashActivity extends AppCompatActivity {
             HoursAPI service = HoursService.getHoursInstance().create(HoursAPI.class);
 
             Call<ArrayList<LeadersModel>> call = service.getJSON();
+            Call<ArrayList<LeadersSkillIQModel>> call1 = service.getSkillIQ();
+
             call.enqueue(new Callback<ArrayList<LeadersModel>>() {
                 @Override
                 public void onResponse(Call<ArrayList<LeadersModel>> call, Response<ArrayList<LeadersModel>> response) {
 
-                    lm = new ArrayList<>();
                     lm = response.body();
                     learnerSuccess = true;
 
@@ -55,20 +59,17 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<ArrayList<LeadersModel>> call, Throwable t) {
                     if (t instanceof UnknownHostException || t instanceof TimeoutException) {
-                        //If timeout
                         learnerSuccess = false;
                         call.cancel();
-                        openActivity();
                     }
                 }
             });
 
-            Call<ArrayList<LeadersSkillIQModel>> call1 = service.getSkillIQ();
+
             call1.enqueue(new Callback<ArrayList<LeadersSkillIQModel>>() {
                 @Override
                 public void onResponse(Call<ArrayList<LeadersSkillIQModel>> call, Response<ArrayList<LeadersSkillIQModel>> response) {
 
-                    sm = new ArrayList<>();
                     sm = response.body();
                     skillSuccess = true;
                     checkSuccess();
@@ -80,6 +81,7 @@ public class SplashActivity extends AppCompatActivity {
                     if (t instanceof UnknownHostException || t instanceof TimeoutException) {
                         skillSuccess = false;
                         call.cancel();
+                        openActivity();
                     }
                 }
             });
