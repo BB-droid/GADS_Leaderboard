@@ -23,7 +23,9 @@ import com.bbapps.gadsleaderboard.util.HoursService;
 import com.bbapps.gadsleaderboard.util.Values;
 import com.google.android.material.tabs.TabLayout;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeoutException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -121,8 +123,10 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ArrayList<LeadersModel>> call, Throwable t) {
-                    call.cancel();
-                    learnerSuccess = false;
+                    if (t instanceof UnknownHostException || t instanceof TimeoutException) {
+                        call.cancel();
+                        learnerSuccess = false;
+                    }
                 }
             });
 
@@ -139,9 +143,11 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ArrayList<LeadersSkillIQModel>> call, Throwable t) {
-                    call.cancel();
-                    skillSuccess = false;
-                    errorDialog();
+                    if (t instanceof UnknownHostException || t instanceof TimeoutException) {
+                        call.cancel();
+                        skillSuccess = false;
+                        errorDialog();
+                    }
                 }
 
             });

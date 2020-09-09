@@ -12,7 +12,9 @@ import com.bbapps.gadsleaderboard.util.HoursAPI;
 import com.bbapps.gadsleaderboard.util.HoursService;
 import com.bbapps.gadsleaderboard.util.Values;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeoutException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,9 +54,11 @@ public class SplashActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ArrayList<LeadersModel>> call, Throwable t) {
-                    learnerSuccess = false;
-                    call.cancel();
-                    openActivity();
+                    if (t instanceof UnknownHostException || t instanceof TimeoutException) {
+                        learnerSuccess = false;
+                        call.cancel();
+                        openActivity();
+                    }
                 }
             });
 
@@ -72,8 +76,10 @@ public class SplashActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ArrayList<LeadersSkillIQModel>> call, Throwable t) {
-                    skillSuccess = false;
-                    call.cancel();
+                    if (t instanceof UnknownHostException || t instanceof TimeoutException) {
+                        skillSuccess = false;
+                        call.cancel();
+                    }
                 }
             });
 
