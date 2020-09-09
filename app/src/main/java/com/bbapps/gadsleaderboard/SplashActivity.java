@@ -55,6 +55,7 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<ArrayList<LeadersModel>> call, Throwable t) {
                     if (t instanceof UnknownHostException || t instanceof TimeoutException) {
+                        //If timeout
                         learnerSuccess = false;
                         call.cancel();
                         openActivity();

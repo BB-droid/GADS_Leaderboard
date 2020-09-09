@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<ArrayList<LeadersSkillIQModel>> call, Throwable t) {
                     if (t instanceof UnknownHostException || t instanceof TimeoutException) {
+                        //If timeout
                         call.cancel();
                         skillSuccess = false;
                         errorDialog();
